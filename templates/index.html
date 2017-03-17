@@ -5,12 +5,12 @@ input {
     width: 60%;
     max-width: 500px;
     margin: 0 auto;
-    color: #fff;
-    border: none;
+    color: #ea5050;
+    border: 1px solid #333;
     outline: none;
     box-shadow: none;
     border-radius: 3px;
-    background-color: #444650;
+    background-color: #f2f2f2;
     margin-bottom: 40px;
     -webkit-transition: box-shadow 0.4s;
     -moz-transition: box-shadow 0.4s;
@@ -27,7 +27,7 @@ img {
 }
 
 input.focus {
-    box-shadow: 3px 3px 5px rgba(20, 20, 20, 0.4);
+    box-shadow: 2px 2px 2px rgba(20, 20, 20, 0.4);
 }
 
 #part2,
@@ -38,21 +38,21 @@ input.focus {
 #cloud {
     width: 60%;
     height: 270px;
-    background-color: #222 !important;
+    background-color: #eee !important;
     margin-left: 20%;
     margin-right: 20%;
     margin-bottom: 30px;
 }
 
 button {
-    background-color: #444650;
-    color: #fff;
+    background-color: #fff;
+    color: #ea5050;
     width: 120px;
     margin-left: -60px;
     padding: 10px 12px;
     text-align: center;
     border-radius: 4px;
-    border: 1px solid #444650;
+    border: 1px solid #ea5050;
     outline: none;
     margin: 0 auto;
     transition: color, background-color .3s;
@@ -63,20 +63,20 @@ button {
 }
 
 button:hover {
-    background: #30323c;
-    border-color: #f2f2f2;
+    background: #ea5050;
+    color: #fff;
     cursor: pointer;
 }
 </style>
 {% endblock %} {% block body %}
 <div style="padding:50px 0;text-align:center;height:400px;">
     <div id="part1">
-        <p style="font-size:30px;color:#f1f2f7;margin-top:50px;margin-bottom:50px;text-align:center;">一个链接 轻松呈现</p>
+        <p style="font-size:30px;color:#333;margin-top:50px;margin-bottom:50px;text-align:center;">一个链接 轻松呈现</p>
         <input type="text" placeholder="输入网页链接">
         <button id="start" style="display:block;">生成图片</button>
     </div>
     <div id="part2">
-        <p style="font-size:30px;color:#f1f2f7;margin-top:70px;margin-bottom:50px;text-align:center;">稍等片刻 结果生成中<span class="fa fa-fw fa-spin fa-spinner" style="margin-left:10px;"></span></p>
+        <p style="font-size:30px;color:#333;margin-top:70px;margin-bottom:50px;text-align:center;">稍等片刻 结果生成中<span class="fa fa-fw fa-spin fa-spinner" style="margin-left:10px;"></span></p>
     </div>
     <div id="part3">
         <div id="cloud"></div>

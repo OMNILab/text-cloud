@@ -77,7 +77,7 @@ def cloud():
 		if minn > c[1]:
 			minn = c[1]
 
-	colors = ['rgba(84, 148, 191, 0.8)','rgba(221, 107, 102, 0.8)','rgba(230, 157, 135, 0.8)','rgba(234, 126, 83, 0.8)','rgba(243, 230, 162, 0.8)']
+	colors = ['rgba(84, 148, 191, 1)','rgba(221, 107, 102, 1)','rgba(230, 157, 135, 1)','rgba(234, 126, 83, 1)','rgba(243, 230, 162, 1)']
 
 	data = [{'name':c[0], 'value':int((c[1] - minn) / (maxn - minn) * 50), 'itemStyle':{'normal':{'color':colors[int(math.floor(random.random() * 5))]}}} for c in content]
 
