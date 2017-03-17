@@ -37,10 +37,10 @@ input.focus {
 
 #cloud {
     width: 60%;
-    max-width: 500px;
     height: 270px;
     background-color: #222 !important;
-    margin: 0 auto;
+    margin-left: 20%;
+    margin-right: 20%;
     margin-bottom: 30px;
 }
 
@@ -73,13 +73,14 @@ button:hover {
     <div id="part1">
         <p style="font-size:30px;color:#f1f2f7;margin-top:50px;margin-bottom:50px;text-align:center;">一个链接 轻松呈现</p>
         <input type="text" placeholder="输入网页链接">
+        <button id="start" style="display:block;">生成图片</button>
     </div>
     <div id="part2">
         <p style="font-size:30px;color:#f1f2f7;margin-top:70px;margin-bottom:50px;text-align:center;">稍等片刻 结果生成中<span class="fa fa-fw fa-spin fa-spinner" style="margin-left:10px;"></span></p>
     </div>
     <div id="part3">
         <div id="cloud"></div>
-        <button>再来一次</button>
+        <button id="again">再来一次</button>
     </div>
 </div>
 <script>
@@ -92,9 +93,9 @@ $(document).ready(function() {
         $(this).removeClass('focus');
     });
 
-    $('input').keyup(function(event) {
-        if ($(this).val() != url) {
-            url = $(this).val();
+    $('#start').click(function(event) {
+        if ($('input').val() != '') {
+            url = $('input').val();
             $('#part1').fadeOut('slow', function() {
                 $('#part3').fadeIn('slow');
             });
@@ -149,7 +150,7 @@ $(document).ready(function() {
         }
     });
 
-    $('button').click(function(event) {
+    $('#again').click(function(event) {
         $('#part3').fadeOut('slow', function() {
             $('#part1').fadeIn('slow');
         });
