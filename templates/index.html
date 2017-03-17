@@ -1,0 +1,157 @@
+{% extends 'layout.html' %} {% block style %}
+<style>
+input {
+    padding: 10px 20px;
+    width: 500px;
+    color: #fff;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    border-radius: 3px;
+    background-color: #444650;
+    margin-bottom: 40px;
+    -webkit-transition: box-shadow 0.4s;
+    -moz-transition: box-shadow 0.4s;
+    -ms-transition: box-shadow 0.4s;
+    -o-transition: box-shadow 0.4s;
+    transition: box-shadow 0.4s;
+}
+
+img {
+    height: 300px;
+    margin-left: 10%;
+    margin-right: 10%;
+    border-radius: 10px;
+}
+
+input.focus {
+    box-shadow: 3px 3px 5px rgba(20, 20, 20, 0.4);
+}
+
+#part2,
+#part3 {
+    display: none;
+}
+
+#cloud {
+    width: 400px;
+    height: 270px;
+    background-color: #222 !important;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+button {
+    background-color: #444650;
+    color: #fff;
+    width: 120px;
+    margin-left: -60px;
+    padding: 10px 12px;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid #444650;
+    outline: none;
+    margin: 0 auto;
+    transition: color, background-color .3s;
+    -o-transition: color, background-color .3s;
+    -ms-transition: color, background-color .3s;
+    -moz-transition: color, background-color .3s;
+    -webkit-transition: color, background-color .3s;
+}
+
+button:hover {
+    background: #30323c;
+    border-color: #f2f2f2;
+    cursor: pointer;
+}
+</style>
+{% endblock %} {% block body %}
+<div style="padding:50px;text-align:center;height:400px;">
+    <div id="part1">
+        <p style="font-size:30px;color:#f1f2f7;margin-top:50px;margin-bottom:50px;">一个链接 轻松呈现</p>
+        <input type="text" placeholder="输入网页链接">
+    </div>
+    <div id="part2">
+        <p style="font-size:30px;color:#f1f2f7;margin-top:70px;margin-bottom:50px;">稍等片刻 结果生成中<span class="fa fa-fw fa-spin fa-spinner" style="margin-left:10px;"></span></p>
+    </div>
+    <div id="part3">
+        <div id="cloud"></div>
+        <button>再来一次</button>
+    </div>
+</div>
+<script>
+$(document).ready(function() {
+    var url = '';
+    $('input').focus(function(event) {
+        $(this).addClass('focus');
+    });
+    $('input').blur(function(event) {
+        $(this).removeClass('focus');
+    });
+
+    $('input').keyup(function(event) {
+        if ($(this).val() != url) {
+            url = $(this).val();
+            $('#part1').fadeOut('slow', function() {
+                $('#part3').fadeIn('slow');
+            });
+            $.ajax({
+                    url: '{{url_for("cloud")}}',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        url: url
+                    },
+                })
+                .done(function(data) {
+                    require(
+                        [
+                            'echarts',
+                            'echarts/chart/wordCloud'
+                        ],
+                        function(ec) {
+                            var cloud = ec.init(document.getElementById('cloud'));
+
+                            var option = {
+                                tooltip: {
+                                    show: false
+                                },
+                                toolbox: {
+                                    show: true,
+                                    feature: {
+                                        saveAsImage: {
+                                            show: true
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: '平台关键词',
+                                    type: 'wordCloud',
+                                    size: ['100%', '100%'],
+                                    textRotation: [0, 45, 90, -45],
+                                    textPadding: 0,
+                                    autoSize: {
+                                        enable: false,
+                                    },
+                                    data: data['data']
+                                }]
+                            };
+
+                            cloud.setOption(option);
+                        }
+                    );
+                })
+                .fail(function() {})
+                .always(function() {});
+        }
+    });
+
+    $('button').click(function(event) {
+        $('#part3').fadeOut('slow', function() {
+            $('#part1').fadeIn('slow');
+        });
+    });
+
+});
+</script>
+{% endblock %}
