@@ -11,7 +11,7 @@ input {
     box-shadow: none;
     border-radius: 3px;
     background-color: #f2f2f2;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     -webkit-transition: box-shadow 0.4s;
     -moz-transition: box-shadow 0.4s;
     -ms-transition: box-shadow 0.4s;
@@ -30,31 +30,23 @@ input.focus {
     box-shadow: 2px 2px 2px rgba(20, 20, 20, 0.4);
 }
 
-#part2,
-#part3 {
-    display: none;
-}
-
 #cloud {
-    width: 60%;
+    width: 100%;
     height: 270px;
     background-color: #eee !important;
-    margin-left: 20%;
-    margin-right: 20%;
-    margin-bottom: 30px;
 }
 
 button {
     background-color: #fff;
     color: #ea5050;
     width: 120px;
-    margin-left: -60px;
     padding: 10px 12px;
     text-align: center;
     border-radius: 4px;
     border: 1px solid #ea5050;
     outline: none;
     margin: 0 auto;
+    margin-bottom: 20px;
     transition: color, background-color .3s;
     -o-transition: color, background-color .3s;
     -ms-transition: color, background-color .3s;
@@ -69,18 +61,10 @@ button:hover {
 }
 </style>
 {% endblock %} {% block body %}
-<div style="padding:50px 0;text-align:center;height:400px;">
-    <div id="part1">
-        <p style="font-size:30px;color:#333;margin-top:50px;margin-bottom:50px;text-align:center;">一个链接 轻松呈现</p>
+<div style="padding:10px 5%;text-align:center;">
         <input type="text" placeholder="输入网页链接">
         <button id="start" style="display:block;">生成图片</button>
-    </div>
-    <div id="part2">
-        <p style="font-size:30px;color:#333;margin-top:70px;margin-bottom:50px;text-align:center;">稍等片刻 结果生成中<span class="fa fa-fw fa-spin fa-spinner" style="margin-left:10px;"></span></p>
-    </div>
-    <div id="part3">
         <div id="cloud"></div>
-        <button id="again">再来一次</button>
     </div>
 </div>
 <script>
@@ -93,12 +77,47 @@ $(document).ready(function() {
         $(this).removeClass('focus');
     });
 
+    var cloud;
+
+    var option;
+
+    require(
+        [
+            'echarts',
+            'echarts/chart/wordCloud'
+        ],
+        function(ec) {
+            cloud = ec.init(document.getElementById('cloud'));
+            option = {
+                tooltip: {
+                    show: false
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        saveAsImage: {
+                            show: true
+                        }
+                    }
+                },
+                series: [{
+                    name: '平台关键词',
+                    type: 'wordCloud',
+                    size: ['100%', '100%'],
+                    textRotation: [0, 45, 90, -45],
+                    textPadding: 0,
+                    autoSize: {
+                        enable: false,
+                    },
+                    data: []
+                }]
+            };
+        }
+    );
+
     $('#start').click(function(event) {
         if ($('input').val() != '') {
             url = $('input').val();
-            $('#part1').fadeOut('slow', function() {
-                $('#part3').fadeIn('slow');
-            });
             $.ajax({
                     url: '{{url_for("cloud")}}',
                     type: 'POST',
@@ -108,54 +127,13 @@ $(document).ready(function() {
                     },
                 })
                 .done(function(data) {
-                    require(
-                        [
-                            'echarts',
-                            'echarts/chart/wordCloud'
-                        ],
-                        function(ec) {
-                            var cloud = ec.init(document.getElementById('cloud'));
-
-                            var option = {
-                                tooltip: {
-                                    show: false
-                                },
-                                toolbox: {
-                                    show: true,
-                                    feature: {
-                                        saveAsImage: {
-                                            show: true
-                                        }
-                                    }
-                                },
-                                series: [{
-                                    name: '平台关键词',
-                                    type: 'wordCloud',
-                                    size: ['100%', '100%'],
-                                    textRotation: [0, 45, 90, -45],
-                                    textPadding: 0,
-                                    autoSize: {
-                                        enable: false,
-                                    },
-                                    data: data['data']
-                                }]
-                            };
-
-                            cloud.setOption(option);
-                        }
-                    );
+                    option.series[0].data = data['data'];
+                    cloud.setOption(option);
                 })
                 .fail(function() {})
                 .always(function() {});
         }
     });
-
-    $('#again').click(function(event) {
-        $('#part3').fadeOut('slow', function() {
-            $('#part1').fadeIn('slow');
-        });
-    });
-
 });
 </script>
 {% endblock %}
